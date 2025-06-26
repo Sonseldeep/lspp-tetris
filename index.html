@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basic Tetris Game</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        background-color: #1a1a1a;
+        font-family: Arial, sans-serif;
+        color: white;
+      }
+
+      .game-container {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      canvas {
+        border: 2px solid #333;
+        background-color: #000;
+      }
+
+      .info-panel {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 8px;
+        min-width: 200px;
+      }
+
+      .score {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      .controls {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .game-over {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <canvas id="gameCanvas" width="300" height="600"></canvas>
+      <div class="info-panel">
+        <div class="score">Score: <span id="score">0</span></div>
+        <div class="score">Lines: <span id="lines">0</span></div>
+        <div class="controls">
+          <h3>Controls:</h3>
+          <p>← → Move</p>
+          <p>↓ Soft Drop</p>
+          <p>↑ Rotate</p>
+          <p>Space: Hard Drop</p>
+          <p>P: Pause</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameOver" class="game-over">
+      <h2>Game Over!</h2>
+      <p>Final Score: <span id="finalScore">0</span></p>
+      <p>Press R to restart</p>
+    </div>
+
+    <script src="tetris.js"></script>
+  </body>
+</html>

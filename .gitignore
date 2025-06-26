@@ -1,0 +1,13 @@
+# Instructor materials - keep these private
+INSTRUCTOR_GUIDE.md
+EXPLANATION.md
+
+# Solution files (if any)
+tetris-solution.js
+solution/
+
+# Common files to ignore
+.DS_Store
+*.log
+node_modules/
+.env
