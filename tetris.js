@@ -119,13 +119,6 @@ class TetrisGame {
     // 5. Increase game speed based on lines cleared
   }
 
-  // TODO: Drop piece instantly to the bottom
-  hardDrop() {
-    // 1. Keep moving piece down until it can't move anymore
-    // 2. Count the distance and add to score
-    // 3. Lock the piece immediately
-  }
-
   // Update score display
   updateScore() {
     this.scoreElement.textContent = this.score;
@@ -182,7 +175,7 @@ class TetrisGame {
     // For each filled cell, draw a rectangle at the correct position
   }
 
-  // Draw grid lines (helper method - optional)
+  // Draw grid lines (helper method)
   drawGrid() {
     this.ctx.strokeStyle = "#333";
     this.ctx.lineWidth = 1;
