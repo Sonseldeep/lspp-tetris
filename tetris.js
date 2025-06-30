@@ -1,3 +1,117 @@
+class MatrixRain {
+  constructor() {
+    this.canvas = document.getElementById("matrixCanvas");
+    this.ctx = this.canvas.getContext("2d");
+
+    // Matrix characters including numbers, letters, and special characters
+    this.chars =
+      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=[]{}|;:,.<>?~`";
+
+    this.fontSize = 14;
+    this.columns = 0;
+    this.drops = [];
+    this.colors = ["#00ff00", "#0080ff", "#ff0080", "#80ff00", "#ff8000"];
+
+    this.resize();
+    this.init();
+    this.animate();
+
+    window.addEventListener("resize", () => this.resize());
+  }
+
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.columns = Math.floor(this.canvas.width / this.fontSize);
+    this.init();
+  }
+
+  init() {
+    this.drops = [];
+    for (let i = 0; i < this.columns; i++) {
+      this.drops[i] = {
+        y: Math.random() * this.canvas.height,
+        speed: Math.random() * 3 + 1,
+        chars: [],
+        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+      };
+
+      // Initialize character trail
+      for (let j = 0; j < 20; j++) {
+        this.drops[i].chars[j] =
+          this.chars[Math.floor(Math.random() * this.chars.length)];
+      }
+    }
+  }
+
+  animate() {
+    // Semi-transparent black background for fade effect
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.font = `${this.fontSize}px 'Courier New', monospace`;
+
+    for (let i = 0; i < this.drops.length; i++) {
+      const drop = this.drops[i];
+
+      // Draw the character trail
+      for (let j = 0; j < drop.chars.length; j++) {
+        const char = drop.chars[j];
+        const x = i * this.fontSize;
+        const y = drop.y - j * this.fontSize;
+
+        if (y > 0 && y < this.canvas.height) {
+          // Calculate alpha based on position in trail
+          const alpha = Math.max(0, 1 - j / drop.chars.length);
+
+          // Brightest character at the front
+          if (j === 0) {
+            this.ctx.fillStyle = "#ffffff";
+            this.ctx.shadowColor = drop.color;
+            this.ctx.shadowBlur = 10;
+          } else {
+            this.ctx.fillStyle =
+              drop.color +
+              Math.floor(alpha * 255)
+                .toString(16)
+                .padStart(2, "0");
+            this.ctx.shadowBlur = 0;
+          }
+
+          this.ctx.fillText(char, x, y);
+        }
+      }
+
+      // Move drop down
+      drop.y += drop.speed;
+
+      // Reset drop when it goes off screen
+      if (drop.y > this.canvas.height + drop.chars.length * this.fontSize) {
+        drop.y = -drop.chars.length * this.fontSize;
+        drop.speed = Math.random() * 3 + 1;
+        drop.color =
+          this.colors[Math.floor(Math.random() * this.colors.length)];
+
+        // Refresh some characters
+        for (let j = 0; j < 5; j++) {
+          const randomIndex = Math.floor(Math.random() * drop.chars.length);
+          drop.chars[randomIndex] =
+            this.chars[Math.floor(Math.random() * this.chars.length)];
+        }
+      }
+
+      // Randomly change characters for dynamic effect
+      if (Math.random() < 0.01) {
+        const randomIndex = Math.floor(Math.random() * drop.chars.length);
+        drop.chars[randomIndex] =
+          this.chars[Math.floor(Math.random() * this.chars.length)];
+      }
+    }
+
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
 class TetrisGame {
   constructor() {
     // Canvas and context
@@ -589,4 +703,5 @@ class TetrisGame {
 
 window.addEventListener("load", () => {
   new TetrisGame();
+  new MatrixRain();
 });
