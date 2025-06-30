@@ -577,29 +577,29 @@ class TetrisGame {
     // Determine frog mood based on score and level (adjusted for real Tetris scoring)
     if (this.score >= 10000 || this.level >= 10) {
       // Master level - very high score or level
-      this.frogElement.textContent = "🤩"; // Star-eyes
+      this.frogElement.textContent = "🐸"; // Excited frog
       this.frogElement.classList.add("excited");
     } else if (this.score >= 5000 || this.level >= 6) {
       // Expert level - great performance
-      this.frogElement.textContent = "😎"; // Cool sunglasses
+      this.frogElement.textContent = "�"; // Cool frog
       this.frogElement.classList.add("happy");
     } else if (this.score >= 2000 || this.level >= 4) {
       // Good player - solid performance
-      this.frogElement.textContent = "😊"; // Happy face
+      this.frogElement.textContent = "�"; // Happy frog
       this.frogElement.classList.add("happy");
     } else if (this.score >= 500 || this.level >= 2) {
       // Getting better - decent score
-      this.frogElement.textContent = "🙂"; // Slightly smiling
+      this.frogElement.textContent = "�"; // Content frog
       // Uses default float animation
     } else if (this.score >= 100 || this.lines >= 2) {
       // Learning - made some progress
-      this.frogElement.textContent = "😐"; // Neutral face
+      this.frogElement.textContent = "�"; // Neutral frog
     } else if (this.score > 0) {
       // Just started playing
-      this.frogElement.textContent = "🤔"; // Thinking face
+      this.frogElement.textContent = "🐸"; // Thinking frog
     } else {
       // Beginning state - completely neutral
-      this.frogElement.textContent = "😶"; // Neutral/blank face
+      this.frogElement.textContent = "�"; // Calm frog
     }
   }
 
