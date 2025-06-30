@@ -46,15 +46,112 @@
       }
 
       .game-over {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(0, 0, 0, 0.8);
-        padding: 20px;
-        border-radius: 8px;
-        text-align: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.9),
+          rgba(50, 50, 100, 0.9)
+        );
         display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .game-over-content {
+        background: linear-gradient(135deg, #2d3561, #1a1f3a);
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        border: 2px solid #4a5568;
+        transform: scale(0.9);
+        animation: scaleIn 0.5s ease-out forwards;
+      }
+
+      @keyframes scaleIn {
+        to {
+          transform: scale(1);
+        }
+      }
+
+      .game-over h2 {
+        color: #ff6b6b;
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .final-score {
+        font-size: 2em;
+        color: #4ecdc4;
+        margin: 20px 0;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .restart-hint {
+        font-size: 1.2em;
+        color: #a8a8a8;
+        margin-top: 20px;
+      }
+
+      .restart-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1em;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 20px 10px 0 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .restart-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .stats-container {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 2em;
+        font-weight: bold;
+        color: #ffd93d;
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 0.9em;
+        color: #a8a8a8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
       }
     </style>
   </head>
@@ -64,6 +161,7 @@
       <div class="info-panel">
         <div class="score">Score: <span id="score">0</span></div>
         <div class="score">Lines: <span id="lines">0</span></div>
+        <div class="score">Level: <span id="level">1</span></div>
         <div class="controls">
           <h3>Controls:</h3>
           <p>← → Move</p>
@@ -71,14 +169,37 @@
           <p>↑ Rotate</p>
           <p>Space: Hard Drop</p>
           <p>P: Pause</p>
+          <p>R: Restart</p>
+          <p>C: Hold</p>
         </div>
       </div>
     </div>
 
     <div id="gameOver" class="game-over">
-      <h2>Game Over!</h2>
-      <p>Final Score: <span id="finalScore">0</span></p>
-      <p>Press R to restart</p>
+      <div class="game-over-content">
+        <h2>🎮 GAME OVER! 🎮</h2>
+
+        <div class="stats-container">
+          <div class="stat-item">
+            <span id="finalScore" class="stat-value">0</span>
+            <span class="stat-label">Final Score</span>
+          </div>
+          <div class="stat-item">
+            <span id="finalLines" class="stat-value">0</span>
+            <span class="stat-label">Lines Cleared</span>
+          </div>
+          <div class="stat-item">
+            <span id="finalLevel" class="stat-value">0</span>
+            <span class="stat-label">Level Reached</span>
+          </div>
+        </div>
+
+        <button id="restartBtn" class="restart-btn">🔄 Play Again</button>
+
+        <div class="restart-hint">
+          Press <strong>R</strong> key to restart quickly
+        </div>
+      </div>
     </div>
 
     <script src="tetris.js"></script>

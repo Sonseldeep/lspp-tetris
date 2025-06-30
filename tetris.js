@@ -1,45 +1,60 @@
 class TetrisGame {
   constructor() {
-    // Get canvas and context
+    // Canvas and context
     this.canvas = document.getElementById("gameCanvas");
     this.ctx = this.canvas.getContext("2d");
 
-    // Get UI elements
+    // UI elements
     this.scoreElement = document.getElementById("score");
     this.linesElement = document.getElementById("lines");
+    this.levelElement = document.getElementById("level");
     this.gameOverElement = document.getElementById("gameOver");
     this.finalScoreElement = document.getElementById("finalScore");
+    this.finalLinesElement = document.getElementById("finalLines");
+    this.finalLevelElement = document.getElementById("finalLevel");
+    this.nextCanvas = document.getElementById("nextCanvas");
+    this.nextCtx = this.nextCanvas?.getContext("2d");
+    this.holdCanvas = document.getElementById("holdCanvas");
+    this.holdCtx = this.holdCanvas?.getContext("2d");
 
     // Game constants
     this.BOARD_WIDTH = 10;
     this.BOARD_HEIGHT = 20;
     this.CELL_SIZE = 32;
 
-    // Game state variables
+    // Game state
     this.board = [];
     this.currentPiece = null;
+    this.nextPiece = null;
+    this.holdPiece = null;
+    this.holdUsed = false;
     this.score = 0;
     this.lines = 0;
+    this.level = 0;
     this.gameOver = false;
     this.paused = false;
     this.dropTime = 0;
     this.dropInterval = 1000;
-
-    // For smooth drop
     this.lastTime = 0;
 
-    // Initialize the game
+    // Piece bag for fair randomization
+    this.pieceBag = [];
+
+    // Initialize
     this.initBoard();
+    this.nextPiece = this.randomPiece();
     this.spawnPiece();
+    this.updateScore(); // Initialize score display
     this.setupEventListeners();
     this.gameLoop();
+    window.addEventListener("resize", () => this.resizeCanvas());
+    this.resizeCanvas();
   }
 
   initBoard() {
-    this.board = [];
-    for (let row = 0; row < this.BOARD_HEIGHT; row++) {
-      this.board.push(new Array(this.BOARD_WIDTH).fill(0));
-    }
+    this.board = Array.from({ length: this.BOARD_HEIGHT }, () =>
+      Array(this.BOARD_WIDTH).fill(0)
+    );
   }
 
   getPieces() {
@@ -103,17 +118,37 @@ class TetrisGame {
     };
   }
 
-  spawnPiece() {
-    const pieces = this.getPieces();
-    const keys = Object.keys(pieces);
-    const randKey = keys[Math.floor(Math.random() * keys.length)];
-    const piece = pieces[randKey];
-    this.currentPiece = {
+  randomPiece() {
+    if (this.pieceBag.length === 0) {
+      this.pieceBag = Object.keys(this.getPieces());
+      // Shuffle
+      for (let i = this.pieceBag.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this.pieceBag[i], this.pieceBag[j]] = [
+          this.pieceBag[j],
+          this.pieceBag[i],
+        ];
+      }
+    }
+    const key = this.pieceBag.pop();
+    const piece = this.getPieces()[key];
+    return {
       shape: piece.shape.map((row) => row.slice()),
       color: piece.color,
+      key,
       x: Math.floor((this.BOARD_WIDTH - piece.shape[0].length) / 2),
       y: 0,
     };
+  }
+
+  spawnPiece() {
+    this.currentPiece = this.nextPiece;
+    this.currentPiece.x = Math.floor(
+      (this.BOARD_WIDTH - this.currentPiece.shape[0].length) / 2
+    );
+    this.currentPiece.y = 0;
+    this.nextPiece = this.randomPiece();
+    this.holdUsed = false;
     if (
       this.checkCollision(
         this.currentPiece.x,
@@ -124,6 +159,44 @@ class TetrisGame {
       this.gameOver = true;
       this.showGameOver();
     }
+  }
+
+  holdCurrentPiece() {
+    if (this.holdUsed || this.gameOver || this.paused) return;
+    if (!this.holdPiece) {
+      this.holdPiece = {
+        shape: this.currentPiece.shape.map((row) => row.slice()),
+        color: this.currentPiece.color,
+        key: this.currentPiece.key,
+      };
+      this.spawnPiece();
+    } else {
+      // Swap
+      const temp = this.holdPiece;
+      this.holdPiece = {
+        shape: this.currentPiece.shape.map((row) => row.slice()),
+        color: this.currentPiece.color,
+        key: this.currentPiece.key,
+      };
+      this.currentPiece = {
+        shape: temp.shape.map((row) => row.slice()),
+        color: temp.color,
+        key: temp.key,
+        x: Math.floor((this.BOARD_WIDTH - temp.shape[0].length) / 2),
+        y: 0,
+      };
+      if (
+        this.checkCollision(
+          this.currentPiece.x,
+          this.currentPiece.y,
+          this.currentPiece.shape
+        )
+      ) {
+        this.gameOver = true;
+        this.showGameOver();
+      }
+    }
+    this.holdUsed = true;
   }
 
   checkCollision(x, y, shape = this.currentPiece.shape) {
@@ -160,7 +233,6 @@ class TetrisGame {
     if (this.gameOver || this.paused) return;
     const { shape, x, y } = this.currentPiece;
     const rotated = this.rotateMatrix(shape);
-    // Wall kick: try shifting left/right if collision
     for (let offset of [0, -1, 1, -2, 2]) {
       if (!this.checkCollision(x + offset, y, rotated)) {
         this.currentPiece.shape = rotated;
@@ -210,38 +282,65 @@ class TetrisGame {
         this.board.splice(row, 1);
         this.board.unshift(new Array(this.BOARD_WIDTH).fill(0));
         linesCleared++;
-        row++; // Check same row again after unshift
+        row++; // Check this row again since we inserted a new row
       }
     }
     if (linesCleared > 0) {
-      this.score += [0, 100, 300, 500, 800][linesCleared];
+      // Tetris scoring: 1=100, 2=300, 3=500, 4=800
+      const baseScore = [0, 100, 300, 500, 800][linesCleared];
+      this.score += baseScore * (this.level + 1); // Bonus for higher levels
       this.lines += linesCleared;
-      // Speed up
-      this.dropInterval = Math.max(100, 1000 - this.lines * 20);
-      this.updateScore();
+      this.level = Math.floor(this.lines / 10);
+      this.dropInterval = Math.max(100, 1000 - this.level * 100);
+      this.updateScore(); // Make sure to update UI after scoring
     }
   }
 
   updateScore() {
-    this.scoreElement.textContent = this.score;
-    this.linesElement.textContent = this.lines;
+    if (this.scoreElement) {
+      this.scoreElement.textContent = this.score.toLocaleString();
+    }
+    if (this.linesElement) {
+      this.linesElement.textContent = this.lines;
+    }
+    if (this.levelElement) {
+      this.levelElement.textContent = this.level + 1;
+    }
   }
 
   showGameOver() {
-    this.finalScoreElement.textContent = this.score;
-    this.gameOverElement.style.display = "flex";
+    // Update all final stats
+    if (this.finalScoreElement) {
+      this.finalScoreElement.textContent = this.score.toLocaleString();
+    }
+    if (this.finalLinesElement) {
+      this.finalLinesElement.textContent = this.lines;
+    }
+    if (this.finalLevelElement) {
+      this.finalLevelElement.textContent = this.level + 1;
+    }
+    if (this.gameOverElement) {
+      this.gameOverElement.style.display = "flex";
+    }
   }
 
   restart() {
     this.score = 0;
     this.lines = 0;
+    this.level = 0;
     this.gameOver = false;
     this.paused = false;
     this.dropInterval = 1000;
     this.updateScore();
     this.initBoard();
+    this.pieceBag = [];
+    this.nextPiece = this.randomPiece();
+    this.holdPiece = null;
+    this.holdUsed = false;
     this.spawnPiece();
-    this.gameOverElement.style.display = "none";
+    if (this.gameOverElement) {
+      this.gameOverElement.style.display = "none";
+    }
   }
 
   setupEventListeners() {
@@ -262,6 +361,7 @@ class TetrisGame {
           this.movePiece(0, 1);
           break;
         case "ArrowUp":
+        case "KeyX":
           this.rotatePiece();
           break;
         case "Space":
@@ -275,9 +375,11 @@ class TetrisGame {
         case "KeyR":
           this.restart();
           break;
+        case "KeyC":
+          this.holdCurrentPiece();
+          break;
       }
     });
-    // Restart button (if you have one)
     const restartBtn = document.getElementById("restartBtn");
     if (restartBtn) {
       restartBtn.onclick = () => this.restart();
@@ -310,9 +412,13 @@ class TetrisGame {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.drawBoard();
-    if (this.currentPiece && !this.gameOver) this.drawPiece(this.currentPiece);
-
+    if (this.currentPiece && !this.gameOver) {
+      this.drawGhostPiece();
+      this.drawPiece(this.currentPiece);
+    }
     this.drawGrid();
+    this.drawNextPiece();
+    this.drawHoldPiece();
 
     // Pause overlay
     if (this.paused && !this.gameOver) {
@@ -350,29 +456,37 @@ class TetrisGame {
     }
   }
 
-  drawPiece(piece) {
+  drawPiece(piece, alpha = 1) {
     const { shape, color, x, y } = piece;
     for (let row = 0; row < shape.length; row++) {
       for (let col = 0; col < shape[row].length; col++) {
         if (shape[row][col]) {
-          this.drawCell(x + col, y + row, color);
+          this.drawCell(x + col, y + row, color, alpha);
         }
       }
     }
   }
 
-  drawCell(x, y, color) {
+  drawGhostPiece() {
+    // Find where the piece would land
+    let { shape, x, y } = this.currentPiece;
+    let ghostY = y;
+    while (!this.checkCollision(x, ghostY + 1, shape)) {
+      ghostY++;
+    }
+    this.drawPiece({ shape, color: "#fff6", x, y: ghostY }, 0.3);
+  }
+
+  drawCell(x, y, color, alpha = 1) {
     const px = x * this.CELL_SIZE;
     const py = y * this.CELL_SIZE;
-    // Shadow
     this.ctx.save();
+    this.ctx.globalAlpha = alpha;
     this.ctx.shadowColor = "#000a";
     this.ctx.shadowBlur = 8;
-    // Block
     this.ctx.fillStyle = color;
     this.ctx.fillRect(px + 1, py + 1, this.CELL_SIZE - 2, this.CELL_SIZE - 2);
-    // Glossy effect
-    this.ctx.globalAlpha = 0.25;
+    this.ctx.globalAlpha = 0.25 * alpha;
     this.ctx.fillStyle = "#fff";
     this.ctx.fillRect(
       px + 2,
@@ -380,9 +494,8 @@ class TetrisGame {
       this.CELL_SIZE - 4,
       this.CELL_SIZE / 2 - 2
     );
-    this.ctx.globalAlpha = 1;
+    this.ctx.globalAlpha = alpha;
     this.ctx.restore();
-    // Border
     this.ctx.strokeStyle = "#fff3";
     this.ctx.lineWidth = 2;
     this.ctx.strokeRect(px + 1, py + 1, this.CELL_SIZE - 2, this.CELL_SIZE - 2);
@@ -405,6 +518,72 @@ class TetrisGame {
       this.ctx.stroke();
     }
     this.ctx.restore();
+  }
+
+  drawNextPiece() {
+    if (!this.nextCtx || !this.nextPiece) return;
+    this.nextCtx.clearRect(0, 0, this.nextCanvas.width, this.nextCanvas.height);
+    this.drawMiniPiece(this.nextCtx, this.nextPiece);
+  }
+
+  drawHoldPiece() {
+    if (!this.holdCtx) return;
+    this.holdCtx.clearRect(0, 0, this.holdCanvas.width, this.holdCanvas.height);
+    if (this.holdPiece) {
+      this.drawMiniPiece(this.holdCtx, this.holdPiece);
+    }
+  }
+
+  drawMiniPiece(ctx, piece) {
+    const { shape, color } = piece;
+    const size = this.CELL_SIZE * 0.7;
+    const offsetX = (ctx.canvas.width - shape[0].length * size) / 2;
+    const offsetY = (ctx.canvas.height - shape.length * size) / 2;
+    for (let row = 0; row < shape.length; row++) {
+      for (let col = 0; col < shape[row].length; col++) {
+        if (shape[row][col]) {
+          ctx.save();
+          ctx.shadowColor = "#000a";
+          ctx.shadowBlur = 6;
+          ctx.fillStyle = color;
+          ctx.fillRect(
+            offsetX + col * size + 1,
+            offsetY + row * size + 1,
+            size - 2,
+            size - 2
+          );
+          ctx.globalAlpha = 0.25;
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(
+            offsetX + col * size + 2,
+            offsetY + row * size + 2,
+            size - 4,
+            size / 2 - 2
+          );
+          ctx.globalAlpha = 1;
+          ctx.restore();
+          ctx.strokeStyle = "#fff3";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(
+            offsetX + col * size + 1,
+            offsetY + row * size + 1,
+            size - 2,
+            size - 2
+          );
+        }
+      }
+    }
+  }
+
+  resizeCanvas() {
+    // Responsive: keep board centered and scaled
+    const minCell = Math.max(
+      16,
+      Math.floor(window.innerHeight / (this.BOARD_HEIGHT + 2))
+    );
+    this.CELL_SIZE = minCell;
+    this.canvas.width = this.BOARD_WIDTH * this.CELL_SIZE;
+    this.canvas.height = this.BOARD_HEIGHT * this.CELL_SIZE;
   }
 }
 
