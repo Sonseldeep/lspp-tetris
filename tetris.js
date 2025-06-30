@@ -3,14 +3,55 @@ class MatrixRain {
     this.canvas = document.getElementById("matrixCanvas");
     this.ctx = this.canvas.getContext("2d");
 
-    // Matrix characters including numbers, letters, and special characters
+    // Enhanced Matrix characters with more diverse symbols and formulas
     this.chars =
-      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=[]{}|;:,.<>?~`";
+      // Nepali - expanded with more words and concepts
+      "अआइईउऊएऐओऔकखगघङचछजझञटठडढणतथदधनपफबभमयरलवशषसह२४६८०१२३४५६७८९एफजीएमजे२०२४अधिकारस्वतन्त्रताशिक्षास्वास्थ्यसुरक्षाविकासप्रकृतिसभ्यताविज्ञानप्रविधिगणितभौतिकशास्त्ररसायनजीवविज्ञानकम्प्युटरइन्टरनेटसफ्टवेयरहार्डवेयर" +
+      // Korean - expanded with tech and science terms
+      "안녕하세요사랑해코딩프로그래밍게임테트리스행복한나은좋아요컴퓨터스크린키보드마우스모니터과학기술수학물리화학생물학지구환경우주문명미래현재과거시간공간차원에너지물질정보데이터네트워크인터넷소프트웨어하드웨어알고리즘데이터베이스인공지능머신러닝딥러닝" +
+      // Greek letters and symbols
+      "αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ" +
+      // Extended math symbols and operators
+      "∫∑∏√∞≈≠≤≥±×÷∂∆∇∈∉⊂⊃∪∩∧∨¬→↔∀∃∄∅⊆⊇⊊⊋⊕⊗⊙⊥∥∠∡∢∝∞∴∵∶∷∸∹∺∻∼∽∾∿≀≁≂≃≄≅≆≇≈≉≊≋≌≍≎≏≐≑≒≓≔≕≖≗≘≙≚≛≜≝≞≟≠≡≢≣≤≥≦≧≨≩⊀⊁⊂⊃⊄⊅⊆⊇⊈⊉⊊⊋" +
+      // Physics formulas and constants - expanded
+      "E=mc²F=maΣF=0PV=nRTΔG=ΔH-TΔSΔE=hfλ=h/pΨ(x,t)ℏω=Eₙħ=h/2πkT=½mv²F=qE+q(v×B)F=GMm/r²v=fλE=pc∇·E=ρ/ε₀∇×B=μ₀J+μ₀ε₀∂E/∂tE=hf=hc/λΨ*Ψ=|Ψ|²iℏ∂Ψ/∂t=ĤΨc=3×10⁸m/sg=9.8m/s²" +
+      // Chemistry formulas and compounds - expanded
+      "C₆H₁₂O₆H₂SO₄NaClCO₂H₂OCaONH₃CH₄C₂H₆ONa₂CO₃CaCl₂MgSO₄HClO₄Al₂O₃SiO₂Fe₂O₃CuSO₄AgNO₃ZnCl₂K₂CrO₄NH₄NO₃Ca(OH)₂Ba(NO₃)₂C₈H₁₈N₂C₁₂H₂₂O₁₁DNA→RNA→ProteinATP→ADP+PiℕaClO₄KMnO₄H₃PO₄C₆H₅OHC₆H₆" +
+      // Advanced calculus and mathematical notation
+      "sin(x)cos(x)tan(x)log(x)ln(x)e^x∂/∂x∮∬∭∰∱∲∳lim→∞Γ(n)Σ∞ₙ₌₁∫₋∞^∞dx∂²/∂x²∇²φ=0δ(x)θ(x)ζ(s)Γ(z)B(p,q)Li₂(z)ψ(x)∏ᵢ₌₁ⁿ∑ⱼ₌₀^∞∫ᵃᵇf(x)dx" +
+      // Binary and hexadecimal - patterns
+      "01100001011000100110001101100100011001010110011001100111011010000110100101101010011010110110110001101101011011100110111101110000011100010111001001110011011101000111010101110110011101110111100001111001011110100101100001000010" +
+      "0xFF00FF0xDEADBEEF0x1337C0DE0xCAFEBABE0xFEEDFACE0x8BADF00D0xC0FFEEAA0xBAADF00D0xBEEFFACE0xDEADC0DE" +
+      // Programming symbols and operators
+      "&&||!===!==++--+=−=*=/=%=>><<&|^~?:[]{}()<>==!=<=>>=<<=>>>&=|=^=**//%%&&||!=?:" +
+      // Original Matrix characters (Japanese katakana and basic alphanumeric)
+      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+-=[]{}|;:,.<>?~`" +
+      // Japanese scientific and technological terms - expanded
+      "量子力学相対性理論電磁気学熱力学統計力学原子物理学宇宙論素粒子物理学天体物理学地球物理学数学解析学代数学幾何学統計学確率論情報理論計算機科学人工知能機械学習深層学習自然言語処理画像認識音声認識パターン認識データマイニングビッグデータクラウドコンピューティング量子コンピューティング";
 
-    this.fontSize = 14;
+    // Enhanced responsive font size with better mobile scaling
+    this.fontSize = this.getResponsiveFontSize();
     this.columns = 0;
     this.drops = [];
-    this.colors = ["#00ff00", "#0080ff", "#ff0080", "#80ff00", "#ff8000"];
+
+    // More vibrant and diverse color palette
+    this.colors = [
+      "#00ff00",
+      "#0080ff",
+      "#ff0080",
+      "#80ff00",
+      "#ff8000",
+      "#00ffff",
+      "#ff00ff",
+      "#ffff00",
+      "#8000ff",
+      "#ff0040",
+      "#40ff00",
+      "#0040ff",
+      "#ff4000",
+      "#00ff80",
+      "#8040ff",
+    ];
 
     this.resize();
     this.init();
@@ -19,9 +60,36 @@ class MatrixRain {
     window.addEventListener("resize", () => this.resize());
   }
 
+  getResponsiveFontSize() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Better responsive scaling for readability
+    if (width < 480) {
+      // Small mobile
+      return Math.max(8, Math.floor(width / 48));
+    } else if (width < 768) {
+      // Mobile
+      return Math.max(10, Math.floor(width / 60));
+    } else if (width < 1024) {
+      // Tablet
+      return Math.max(12, Math.floor(width / 75));
+    } else if (width < 1440) {
+      // Desktop
+      return Math.max(14, Math.floor(width / 90));
+    } else if (width < 1920) {
+      // Large desktop
+      return Math.max(16, Math.floor(width / 110));
+    } else {
+      // Ultra-wide screens
+      return Math.max(18, Math.floor(width / 130));
+    }
+  }
+
   resize() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
+    this.fontSize = this.getResponsiveFontSize();
     this.columns = Math.floor(this.canvas.width / this.fontSize);
     this.init();
   }
@@ -31,13 +99,16 @@ class MatrixRain {
     for (let i = 0; i < this.columns; i++) {
       this.drops[i] = {
         y: Math.random() * this.canvas.height,
-        speed: Math.random() * 3 + 1,
+        speed: Math.random() * 6 + 2, // Variable speed (2-8)
         chars: [],
         color: this.colors[Math.floor(Math.random() * this.colors.length)],
+        intensity: Math.random() * 0.5 + 0.5, // Brightness variation
+        lastChangeTime: 0,
       };
 
-      // Initialize character trail
-      for (let j = 0; j < 20; j++) {
+      // Variable trail length for more organic look
+      const trailLength = Math.floor(Math.random() * 20) + 12; // 12-32 characters
+      for (let j = 0; j < trailLength; j++) {
         this.drops[i].chars[j] =
           this.chars[Math.floor(Math.random() * this.chars.length)];
       }
@@ -45,36 +116,50 @@ class MatrixRain {
   }
 
   animate() {
-    // Semi-transparent black background for fade effect
-    this.ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    const currentTime = Date.now();
+
+    // Much more subtle fade for better text visibility
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.008)"; // Much more subtle fade
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.font = `${this.fontSize}px 'Courier New', monospace`;
+    this.ctx.font = `${this.fontSize}px 'Courier New', 'Monaco', 'Menlo', monospace`;
+    this.ctx.textAlign = "left";
+    this.ctx.textBaseline = "top";
 
     for (let i = 0; i < this.drops.length; i++) {
       const drop = this.drops[i];
 
-      // Draw the character trail
+      // Draw the character trail with enhanced readability
       for (let j = 0; j < drop.chars.length; j++) {
         const char = drop.chars[j];
         const x = i * this.fontSize;
         const y = drop.y - j * this.fontSize;
 
-        if (y > 0 && y < this.canvas.height) {
-          // Calculate alpha based on position in trail
-          const alpha = Math.max(0, 1 - j / drop.chars.length);
+        if (y > -this.fontSize && y < this.canvas.height + this.fontSize) {
+          // Calculate alpha based on position in trail with smoother falloff
+          const distanceFromHead = j / drop.chars.length;
+          const alpha = Math.max(
+            0,
+            (1 - Math.pow(distanceFromHead, 1.2)) * drop.intensity
+          );
 
-          // Brightest character at the front
+          // Enhanced head character with less blur for readability
           if (j === 0) {
+            // Bright white head with subtle glow
             this.ctx.fillStyle = "#ffffff";
             this.ctx.shadowColor = drop.color;
-            this.ctx.shadowBlur = 10;
+            this.ctx.shadowBlur = 2; // Reduced blur for better readability
+          } else if (j === 1) {
+            // Second character slightly dimmed but still bright
+            this.ctx.fillStyle = drop.color + "ee"; // High opacity
+            this.ctx.shadowColor = drop.color;
+            this.ctx.shadowBlur = 1;
           } else {
-            this.ctx.fillStyle =
-              drop.color +
-              Math.floor(alpha * 255)
-                .toString(16)
-                .padStart(2, "0");
+            // Trail characters with smooth alpha falloff - higher minimum visibility
+            const hexAlpha = Math.floor(Math.max(alpha * 255, 30))
+              .toString(16)
+              .padStart(2, "0");
+            this.ctx.fillStyle = drop.color + hexAlpha;
             this.ctx.shadowBlur = 0;
           }
 
@@ -82,29 +167,43 @@ class MatrixRain {
         }
       }
 
-      // Move drop down
-      drop.y += drop.speed;
+      // Enhanced movement with controlled speed for better visibility
+      const acceleration = 1 + drop.speed * 0.05; // Reduced acceleration
+      drop.y += drop.speed * acceleration * 0.6; // Slower overall speed for readability
 
-      // Reset drop when it goes off screen
+      // Reset drop when it goes off screen with enhanced randomization
       if (drop.y > this.canvas.height + drop.chars.length * this.fontSize) {
-        drop.y = -drop.chars.length * this.fontSize;
-        drop.speed = Math.random() * 3 + 1;
+        drop.y =
+          -drop.chars.length * this.fontSize -
+          Math.random() * this.canvas.height * 0.3;
+        drop.speed = Math.random() * 6 + 2; // New random speed
         drop.color =
           this.colors[Math.floor(Math.random() * this.colors.length)];
+        drop.intensity = Math.random() * 0.5 + 0.5;
+        drop.lastChangeTime = currentTime;
 
-        // Refresh some characters
-        for (let j = 0; j < 5; j++) {
+        // Refresh more characters for variety
+        const refreshCount = Math.floor(Math.random() * 12) + 5; // 5-16 characters
+        for (let j = 0; j < refreshCount; j++) {
           const randomIndex = Math.floor(Math.random() * drop.chars.length);
           drop.chars[randomIndex] =
             this.chars[Math.floor(Math.random() * this.chars.length)];
         }
       }
 
-      // Randomly change characters for dynamic effect
-      if (Math.random() < 0.01) {
+      // Frequent character changes for dynamic effect but not too fast
+      if (Math.random() < 0.03) {
+        // Balanced frequency
         const randomIndex = Math.floor(Math.random() * drop.chars.length);
         drop.chars[randomIndex] =
           this.chars[Math.floor(Math.random() * this.chars.length)];
+      }
+
+      // Occasional color changes for added dynamism
+      if (currentTime - drop.lastChangeTime > 8000 && Math.random() < 0.0005) {
+        drop.color =
+          this.colors[Math.floor(Math.random() * this.colors.length)];
+        drop.lastChangeTime = currentTime;
       }
     }
 
@@ -126,6 +225,7 @@ class TetrisGame {
     this.finalScoreElement = document.getElementById("finalScore");
     this.finalLinesElement = document.getElementById("finalLines");
     this.finalLevelElement = document.getElementById("finalLevel");
+    this.frogElement = document.getElementById("frog");
     this.nextCanvas = document.getElementById("nextCanvas");
     this.nextCtx = this.nextCanvas?.getContext("2d");
     this.holdCanvas = document.getElementById("holdCanvas");
@@ -158,7 +258,7 @@ class TetrisGame {
     this.initBoard();
     this.nextPiece = this.randomPiece();
     this.spawnPiece();
-    this.updateScore(); // Initialize score display
+    this.updateScore(); // Initialize score display and frog
     this.setupEventListeners();
     this.gameLoop();
     window.addEventListener("resize", () => this.resizeCanvas());
@@ -338,6 +438,13 @@ class TetrisGame {
     if (!this.checkCollision(x + dx, y + dy, shape)) {
       this.currentPiece.x += dx;
       this.currentPiece.y += dy;
+
+      // Add small score for soft drop (moving down) - 1 point per cell in real Tetris
+      if (dy > 0) {
+        this.score += 1;
+        this.updateScore();
+      }
+
       return true;
     }
     return false;
@@ -385,6 +492,8 @@ class TetrisGame {
         }
       }
     }
+
+    // No points for just placing pieces in real Tetris - only for clearing lines
     this.clearLines();
     this.spawnPiece();
   }
@@ -400,13 +509,49 @@ class TetrisGame {
       }
     }
     if (linesCleared > 0) {
-      // Tetris scoring: 1=100, 2=300, 3=500, 4=800
-      const baseScore = [0, 100, 300, 500, 800][linesCleared];
-      this.score += baseScore * (this.level + 1); // Bonus for higher levels
+      // Official Tetris scoring system
+      let baseScore;
+      switch (linesCleared) {
+        case 1:
+          baseScore = 40; // Single
+          break;
+        case 2:
+          baseScore = 100; // Double
+          break;
+        case 3:
+          baseScore = 300; // Triple
+          break;
+        case 4:
+          baseScore = 1200; // Tetris
+          this.celebrateTetris();
+          break;
+        default:
+          baseScore = 0;
+      }
+
+      // Score is multiplied by (level + 1) in real Tetris
+      this.score += baseScore * (this.level + 1);
       this.lines += linesCleared;
       this.level = Math.floor(this.lines / 10);
-      this.dropInterval = Math.max(100, 1000 - this.level * 100);
+      this.dropInterval = Math.max(50, 1000 - this.level * 50); // Faster progression
+
       this.updateScore(); // Make sure to update UI after scoring
+    }
+  }
+
+  celebrateTetris() {
+    // Make frog super excited temporarily for Tetris
+    if (this.frogElement) {
+      const originalClass = this.frogElement.className;
+      const originalText = this.frogElement.textContent;
+
+      this.frogElement.textContent = "🎉";
+      this.frogElement.className = "frog excited";
+
+      // Reset after 2 seconds
+      setTimeout(() => {
+        this.updateFrogMood(); // This will set the correct mood based on score
+      }, 2000);
     }
   }
 
@@ -419,6 +564,42 @@ class TetrisGame {
     }
     if (this.levelElement) {
       this.levelElement.textContent = this.level + 1;
+    }
+    this.updateFrogMood();
+  }
+
+  updateFrogMood() {
+    if (!this.frogElement) return;
+
+    // Remove all mood classes
+    this.frogElement.className = "frog";
+
+    // Determine frog mood based on score and level (adjusted for real Tetris scoring)
+    if (this.score >= 10000 || this.level >= 10) {
+      // Master level - very high score or level
+      this.frogElement.textContent = "🤩"; // Star-eyes
+      this.frogElement.classList.add("excited");
+    } else if (this.score >= 5000 || this.level >= 6) {
+      // Expert level - great performance
+      this.frogElement.textContent = "😎"; // Cool sunglasses
+      this.frogElement.classList.add("happy");
+    } else if (this.score >= 2000 || this.level >= 4) {
+      // Good player - solid performance
+      this.frogElement.textContent = "😊"; // Happy face
+      this.frogElement.classList.add("happy");
+    } else if (this.score >= 500 || this.level >= 2) {
+      // Getting better - decent score
+      this.frogElement.textContent = "🙂"; // Slightly smiling
+      // Uses default float animation
+    } else if (this.score >= 100 || this.lines >= 2) {
+      // Learning - made some progress
+      this.frogElement.textContent = "😐"; // Neutral face
+    } else if (this.score > 0) {
+      // Just started playing
+      this.frogElement.textContent = "🤔"; // Thinking face
+    } else {
+      // Beginning state - completely neutral
+      this.frogElement.textContent = "😶"; // Neutral/blank face
     }
   }
 
@@ -455,6 +636,8 @@ class TetrisGame {
     if (this.gameOverElement) {
       this.gameOverElement.style.display = "none";
     }
+    // Reset frog to normal state
+    this.updateFrogMood();
   }
 
   setupEventListeners() {
@@ -479,8 +662,14 @@ class TetrisGame {
           this.rotatePiece();
           break;
         case "Space":
-          // Hard drop
-          while (this.movePiece(0, 1)) {}
+          // Hard drop - give bonus points for each cell dropped (2 points per cell in real Tetris)
+          let dropDistance = 0;
+          while (this.movePiece(0, 1)) {
+            dropDistance++;
+          }
+          // Hard drop bonus: 2 points per cell
+          this.score += dropDistance * 2;
+          this.updateScore();
           this.lockPiece();
           break;
         case "KeyP":
@@ -494,6 +683,81 @@ class TetrisGame {
           break;
       }
     });
+
+    // Touch controls for mobile
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    this.canvas.addEventListener(
+      "touchstart",
+      (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchStartTime = Date.now();
+      },
+      { passive: false }
+    );
+
+    this.canvas.addEventListener(
+      "touchend",
+      (e) => {
+        e.preventDefault();
+        if (this.gameOver || this.paused) return;
+
+        const touch = e.changedTouches[0];
+        const touchEndX = touch.clientX;
+        const touchEndY = touch.clientY;
+        const touchEndTime = Date.now();
+
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        const deltaTime = touchEndTime - touchStartTime;
+
+        const minSwipeDistance = 30;
+        const maxSwipeTime = 300;
+
+        // Quick tap for rotation
+        if (Math.abs(deltaX) < 20 && Math.abs(deltaY) < 20 && deltaTime < 200) {
+          this.rotatePiece();
+          return;
+        }
+
+        // Swipe gestures
+        if (deltaTime < maxSwipeTime) {
+          if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal swipe
+            if (Math.abs(deltaX) > minSwipeDistance) {
+              if (deltaX > 0) {
+                this.movePiece(1, 0); // Swipe right
+              } else {
+                this.movePiece(-1, 0); // Swipe left
+              }
+            }
+          } else {
+            // Vertical swipe
+            if (Math.abs(deltaY) > minSwipeDistance) {
+              if (deltaY > 0) {
+                this.movePiece(0, 1); // Swipe down (soft drop)
+              } else {
+                // Swipe up for hard drop
+                let dropDistance = 0;
+                while (this.movePiece(0, 1)) {
+                  dropDistance++;
+                }
+                this.score += dropDistance * 2;
+                this.updateScore();
+                this.lockPiece();
+              }
+            }
+          }
+        }
+      },
+      { passive: false }
+    );
+
     const restartBtn = document.getElementById("restartBtn");
     if (restartBtn) {
       restartBtn.onclick = () => this.restart();
@@ -690,12 +954,37 @@ class TetrisGame {
   }
 
   resizeCanvas() {
-    // Responsive: keep board centered and scaled
-    const minCell = Math.max(
-      16,
-      Math.floor(window.innerHeight / (this.BOARD_HEIGHT + 2))
-    );
-    this.CELL_SIZE = minCell;
+    // Enhanced responsive sizing for better mobile experience
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Calculate optimal cell size based on screen dimensions
+    const maxWidth = Math.floor(screenWidth * 0.8); // Leave some margin
+    const maxHeight = Math.floor(screenHeight * 0.7); // Leave space for UI
+
+    // Calculate cell size based on available space
+    const cellByWidth = Math.floor(maxWidth / this.BOARD_WIDTH);
+    const cellByHeight = Math.floor(maxHeight / this.BOARD_HEIGHT);
+
+    // Use the smaller dimension to ensure the game fits
+    let optimalCellSize = Math.min(cellByWidth, cellByHeight);
+
+    // Set minimum and maximum cell sizes for different screen types
+    if (screenWidth < 480) {
+      // Small mobile
+      optimalCellSize = Math.max(14, Math.min(optimalCellSize, 22));
+    } else if (screenWidth < 768) {
+      // Mobile
+      optimalCellSize = Math.max(16, Math.min(optimalCellSize, 28));
+    } else if (screenWidth < 1024) {
+      // Tablet
+      optimalCellSize = Math.max(20, Math.min(optimalCellSize, 35));
+    } else {
+      // Desktop and larger
+      optimalCellSize = Math.max(24, Math.min(optimalCellSize, 45));
+    }
+
+    this.CELL_SIZE = optimalCellSize;
     this.canvas.width = this.BOARD_WIDTH * this.CELL_SIZE;
     this.canvas.height = this.BOARD_HEIGHT * this.CELL_SIZE;
   }
