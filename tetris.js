@@ -991,6 +991,48 @@ class TetrisGame {
 }
 
 window.addEventListener("load", () => {
-  new TetrisGame();
+  // Initialize Matrix Rain immediately
   new MatrixRain();
+
+  // Welcome screen functionality
+  const welcomeScreen = document.getElementById("welcomeScreen");
+  const playButton = document.getElementById("playButton");
+  let gameStarted = false;
+  let tetrisGame = null;
+
+  function startGame() {
+    if (gameStarted) return;
+
+    gameStarted = true;
+    welcomeScreen.style.animation = "welcomeFadeIn 0.5s ease-out reverse";
+
+    setTimeout(() => {
+      welcomeScreen.classList.add("hidden");
+      // Initialize Tetris game
+      tetrisGame = new TetrisGame();
+    }, 500);
+  }
+
+  // Play button click handler
+  playButton.addEventListener("click", startGame);
+
+  // Keyboard handler for welcome screen
+  document.addEventListener("keydown", (e) => {
+    if (!gameStarted && (e.code === "Space" || e.code === "Enter")) {
+      e.preventDefault();
+      startGame();
+    }
+  });
+
+  // Add some interactive effects to the welcome screen
+  const welcomeFrog = document.querySelector(".welcome-frog");
+  if (welcomeFrog) {
+    welcomeFrog.addEventListener("click", () => {
+      welcomeFrog.style.animation = "none";
+      setTimeout(() => {
+        welcomeFrog.style.animation =
+          "welcomeFrogJump 1.5s ease-in-out infinite";
+      }, 100);
+    });
+  }
 });
