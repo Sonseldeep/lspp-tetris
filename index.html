@@ -44,6 +44,102 @@
         box-shadow: 0 0 30px rgba(0, 255, 0, 0.1);
       }
 
+      .side-panel {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 50, 0, 0.8),
+          rgba(0, 20, 0, 0.9)
+        );
+        padding: 15px;
+        border-radius: 15px;
+        min-width: 150px;
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .left-panel {
+        order: -1;
+      }
+
+      .preview-container {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .preview-container h3 {
+        color: #00ff00;
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+      }
+
+      .preview-container canvas {
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      .difficulty-container {
+        margin-bottom: 20px;
+      }
+
+      .difficulty-container h3 {
+        color: #00ff00;
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+      }
+
+      #difficultySelect {
+        width: 100%;
+        padding: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        border-radius: 8px;
+        color: #00ff00;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+      }
+
+      #difficultySelect option {
+        background: rgba(0, 0, 0, 0.9);
+        color: #00ff00;
+      }
+
+      .highscore-container {
+        margin-bottom: 20px;
+      }
+
+      .highscore-container h3 {
+        color: #00ff00;
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+      }
+
+      #highScoresList {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(0, 255, 0, 0.3);
+        border-radius: 8px;
+        padding: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .highscore-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        font-size: 12px;
+        color: #80ff80;
+      }
+
+      .highscore-rank {
+        font-weight: bold;
+        color: #ffd93d;
+      }
+
       canvas {
         border: 2px solid #00ff00;
         background-color: #000;
@@ -169,6 +265,41 @@
           max-width: 400px;
           margin: 0 auto;
           backdrop-filter: blur(8px);
+        }
+
+        .side-panel {
+          width: 100%;
+          max-width: 350px;
+          min-width: unset;
+          padding: 12px;
+          order: 2;
+        }
+
+        .left-panel {
+          order: 2;
+          display: flex;
+          flex-direction: row;
+          gap: 15px;
+          justify-content: space-between;
+        }
+
+        .preview-container {
+          flex: 1;
+          margin-bottom: 0;
+        }
+
+        .difficulty-container {
+          flex: 1;
+          margin-bottom: 0;
+        }
+
+        .highscore-container {
+          display: none; /* Hide on mobile to save space */
+        }
+
+        .preview-container canvas {
+          width: 80px;
+          height: 80px;
         }
 
         canvas {
@@ -767,11 +898,43 @@
     </div>
 
     <div class="game-container">
+      <div class="side-panel left-panel">
+        <!-- Hold Piece Preview -->
+        <div class="preview-container">
+          <h3>Hold</h3>
+          <canvas id="holdCanvas" width="120" height="120"></canvas>
+        </div>
+
+        <!-- Difficulty Selector -->
+        <div class="difficulty-container">
+          <h3>Difficulty</h3>
+          <select id="difficultySelect">
+            <option value="easy">🟢 Easy</option>
+            <option value="normal" selected>🔵 Normal</option>
+            <option value="hard">🟠 Hard</option>
+            <option value="extreme">🔴 Extreme</option>
+          </select>
+        </div>
+
+        <!-- High Scores -->
+        <div class="highscore-container">
+          <h3>High Scores</h3>
+          <div id="highScoresList"></div>
+        </div>
+      </div>
+
       <canvas id="gameCanvas" width="300" height="600"></canvas>
+
       <div class="info-panel">
         <!-- Animated Frog -->
         <div class="frog-container">
           <div id="frog" class="frog">🐸</div>
+        </div>
+
+        <!-- Next Piece Preview -->
+        <div class="preview-container">
+          <h3>Next</h3>
+          <canvas id="nextCanvas" width="120" height="120"></canvas>
         </div>
 
         <div class="score">Score: <span id="score">0</span></div>
